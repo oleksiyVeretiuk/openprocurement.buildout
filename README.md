@@ -2,14 +2,24 @@
 Development Buildout of OpenProcurement
 
 Follow the instructions:
+  1. Copy `buildout.cfg.example` to `buildout.cfg` including all required items. For example:
+  `buildout.cfg` for **development**:
+  ```
+  [buildout]
+  extends =
+      profiles/development.cfg
 
-  1. Bootstrap the buildout with Python 2.7:
+  [openprocurement.api.ini]
+  couchdb_db = test
+  ```
+
+  2. Bootstrap the buildout with Python 2.7:
 
      ```
      $ python bootstrap.py
      ```
 
-  2. Build the buildout:
+  3. Build the buildout:
 
       ```
       $ bin/buildout -N
@@ -30,4 +40,3 @@ To start environment services:
 To to run openprocurement.api instance:
 
     bin/pserve etc/openprocurement.api.ini
-
