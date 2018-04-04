@@ -5,3 +5,6 @@ develop-eggs/
 eggs/
 src/
 var/
+docs/
+etc/
+buildout.cfg
