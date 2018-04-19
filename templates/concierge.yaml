@@ -1,0 +1,63 @@
+---
+version: 1
+db:
+ host:  ${options['db_host']}
+ name:  ${options['db_name']}
+ port: ${options['db_port']}
+ login: ${options['db_login']}
+ password: ${options['db_password']}
+ filter: "lots/status"
+errors_doc: ${options['errors_doc']}
+time_to_sleep: ${options['time_to_sleep']}
+
+lots:
+  api:
+    url: ${options['lots_url']}
+    token: ${options['lot_secret_token']}
+    version:  ${options['lots_api_version']}
+
+assets:
+  api:
+    url: ${options['assets_url']}
+    token: ${options['assets_secret_token']}
+    version: ${options['assets_api_version']}
+
+formatters:
+  simple:
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: simple
+    stream: ext://sys.stdout
+{% if 'statsd' in options %}
+  statsd:
+    class: statsdhandler.StatsdHandler
+    level: DEBUG
+    config_path: "${options['handler_config']}"
+{% end %}
+{% if 'journal' in options %}
+  journal:
+    class: ExtendedJournalHandler.ExtendedJournalHandler
+    formatter: simple
+    level: INFO
+    SYSLOG_IDENTIFIER: CONCIERGE
+{% end %}
+
+loggers:
+  openregistry.concierge.worker:
+    handlers: [console${',statsd' if 'statsd' in options else ''}]
+    propagate: no
+    level: DEBUG
+{% if 'exc_logger' in options %}
+  logger_exc_logger:
+    level: ERROR
+    handlers: {% if 'journal' in options %}journal{% end %}
+    qualname: exc_logger
+    propagate: 0
+{% end %}
+  "":
+    handlers: [console${',statsd' if 'statsd' in options else ''}]
+    level: DEBUG
