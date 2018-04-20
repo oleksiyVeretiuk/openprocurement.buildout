@@ -29,6 +29,15 @@ config = {
     "token": "broker",
 }
 
+test_asset_bounce_data['assetHolder'] = {
+    'name': 'Just assetHolder',
+    'identifier': {
+        'scheme': 'UA-EDR',
+        'legalName': 'Just a legal name',
+        'id': '11111-4',
+        'uri': 'https://127.0.0.1:8000'
+    }
+}
 # Data for test
 test_asset_bounce_data['mode'] = 'test'
 test_loki_lot_data['mode'] = 'test'
@@ -139,7 +148,9 @@ class InternalTest(unittest.TestCase):
 
         lot = self.lots_client.get_lot(lot_id)
         asset = self.assets_client.get_asset(asset_id)
+        self.assertEqual(lot.data.get('lotHolder'), asset.data.get('assetHolder'))
         self.assertEqual(lot.data.lotCustodian, asset.data.assetCustodian)
+        self.assertEqual(lot.data.decisions[0], test_loki_lot_data['decisions'][0])
         self.assertEqual(lot.data.decisions[1], asset.data.decisions[0])
         self.assertEqual(lot.data.title, asset.data.title)
         self.assertEqual(lot.data.description, asset.data.description)
