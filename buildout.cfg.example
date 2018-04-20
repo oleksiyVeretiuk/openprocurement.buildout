@@ -1,6 +1,7 @@
 [buildout]
 index = https://pypi.python.org/simple
 extends =
+    profiles/templates.cfg
     profiles/development.cfg
 
 # chronograph
