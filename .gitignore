@@ -7,4 +7,6 @@ src/
 var/
 docs/
 etc/
+parts/
 buildout.cfg
+.idea/
